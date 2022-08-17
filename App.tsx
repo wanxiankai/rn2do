@@ -9,7 +9,7 @@
  */
 
 import React, {useState} from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import {StyleSheet, View, FlatList, Button, StatusBar} from 'react-native';
 import TaskInput from './components/taskInput';
 import TaskItem from './components/taskItem';
 
@@ -18,32 +18,50 @@ export type Task = {
   id: string;
 };
 const App = () => {
+  const [showModal, setShowModal] = useState(false);
   const [taskList, setTaskList] = useState<Task[]>([]);
+
+  const startAddTask = () => {
+    setShowModal(true);
+  };
+
+  const cancelModal = () => {
+    setShowModal(false);
+  };
 
   const onAddTask = (currentTask: string) => {
     setTaskList(currentTaskList => [
       ...currentTaskList,
       {name: currentTask, id: Math.random().toString()},
     ]);
+    setShowModal(false);
   };
 
   const onRemoveTask = (id: string) => {
     setTaskList([...taskList.filter(item => item.id !== id)]);
   };
   return (
-    <View style={styles.container}>
-      <TaskInput onAddTask={onAddTask} />
-      <View style={styles.taskList}>
-        <FlatList
-          data={taskList}
-          renderItem={task => (
-            <TaskItem task={task.item} onRemoveTask={onRemoveTask} />
-          )}
-          keyExtractor={item => item.id}
-          alwaysBounceVertical={false}
+    <>
+      <StatusBar barStyle={'light-content'} />
+      <View style={styles.container}>
+        <Button title="添加新任务" color="#a978e9" onPress={startAddTask} />
+        <TaskInput
+          modalIsVisable={showModal}
+          onAddTask={onAddTask}
+          onCancelModal={cancelModal}
         />
+        <View style={styles.taskList}>
+          <FlatList
+            data={taskList}
+            renderItem={task => (
+              <TaskItem task={task.item} onRemoveTask={onRemoveTask} />
+            )}
+            keyExtractor={item => item.id}
+            alwaysBounceVertical={false}
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
@@ -52,6 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 50,
     paddingHorizontal: 16,
+    backgroundColor: '#1e085a',
   },
   taskList: {
     flex: 5,

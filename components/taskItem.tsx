@@ -12,24 +12,31 @@ const TaskItem: React.FC<IProps> = props => {
     props.onRemoveTask(props.task.id);
   };
   return (
-    <Pressable onPress={removeTask}>
-      <View style={styles.taskItem}>
+    <View style={styles.taskItem}>
+      <Pressable
+        style={({pressed}) => pressed && styles.pressedItem}
+        android_ripple={{color: '#450599'}}
+        onPress={removeTask}>
         <Text style={styles.taskName}>{props.task.name}</Text>
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   taskItem: {
     margin: 8,
-    padding: 8,
     borderRadius: 6,
     backgroundColor: '#5e0acc',
     color: '#fff',
   },
   taskName: {
+    padding: 8,
     color: '#fff',
+  },
+  pressedItem: {
+    backgroundColor: '#450599',
+    borderRadius: 6,
   },
 });
 export default TaskItem;
