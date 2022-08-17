@@ -9,11 +9,18 @@
  */
 
 import React, {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  FlatList,
+} from 'react-native';
 
 type Task = {
   name: string;
-  id: number;
+  id: string;
 };
 const App = () => {
   const [currentTask, setCurrentTask] = useState<string>('');
@@ -26,7 +33,7 @@ const App = () => {
   const onAddTask = () => {
     setTaskList(currentTaskList => [
       ...currentTaskList,
-      {name: currentTask, id: Math.random()},
+      {name: currentTask, id: Math.random().toString()},
     ]);
     setCurrentTask('');
   };
@@ -34,6 +41,7 @@ const App = () => {
     <View style={styles.container}>
       <View style={styles.taskInput}>
         <TextInput
+          value={currentTask}
           onChangeText={onInput}
           style={styles.textInput}
           placeholder="请输入待做事项"
@@ -41,13 +49,16 @@ const App = () => {
         <Button title="添加" onPress={onAddTask} />
       </View>
       <View style={styles.taskList}>
-        {taskList.map(task => {
-          return (
-            <Text style={styles.taskItem} key={task.id}>
-              {task.name}
-            </Text>
-          );
-        })}
+        <FlatList
+          data={taskList}
+          renderItem={task => (
+            <View style={styles.taskItem}>
+              <Text style={styles.taskName}>{task.item.name}</Text>
+            </View>
+          )}
+          keyExtractor={item => item.id}
+          alwaysBounceVertical={false}
+        />
       </View>
     </View>
   );
@@ -83,6 +94,9 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 6,
     backgroundColor: '#5e0acc',
+    color: '#fff',
+  },
+  taskName: {
     color: '#fff',
   },
 });
