@@ -13,7 +13,7 @@ import {StyleSheet, View, FlatList} from 'react-native';
 import TaskInput from './components/taskInput';
 import TaskItem from './components/taskItem';
 
-type Task = {
+export type Task = {
   name: string;
   id: string;
 };
@@ -26,13 +26,19 @@ const App = () => {
       {name: currentTask, id: Math.random().toString()},
     ]);
   };
+
+  const onRemoveTask = (id: string) => {
+    setTaskList([...taskList.filter(item => item.id !== id)]);
+  };
   return (
     <View style={styles.container}>
       <TaskInput onAddTask={onAddTask} />
       <View style={styles.taskList}>
         <FlatList
           data={taskList}
-          renderItem={task => <TaskItem name={task.item.name} />}
+          renderItem={task => (
+            <TaskItem task={task.item} onRemoveTask={onRemoveTask} />
+          )}
           keyExtractor={item => item.id}
           alwaysBounceVertical={false}
         />

@@ -1,15 +1,22 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {Task} from '../App';
 
 interface IProps {
-  name: string;
+  onRemoveTask: (id: string) => void;
+  task: Task;
 }
 
 const TaskItem: React.FC<IProps> = props => {
+  const removeTask = () => {
+    props.onRemoveTask(props.task.id);
+  };
   return (
-    <View style={styles.taskItem}>
-      <Text style={styles.taskName}>{props.name}</Text>
-    </View>
+    <Pressable onPress={removeTask}>
+      <View style={styles.taskItem}>
+        <Text style={styles.taskName}>{props.task.name}</Text>
+      </View>
+    </Pressable>
   );
 };
 
